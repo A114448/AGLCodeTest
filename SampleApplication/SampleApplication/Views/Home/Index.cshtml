@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@using SampleApplicationDataModel
+@model ViewModel
+
+<h3>Male</h3>
+<table>
+    @foreach (animal objanimal in Model.ListMale)
+    {
+    <tr>
+        <td>@objanimal.name</td>
+</tr>
+    }
+</table>
+<h3>Female</h3>
+<table>
+    @foreach (animal objanimal in Model.ListFemale)
+    {
+        <tr>
+            <td>@objanimal.name</td>
+        </tr>
+    }
+</table>
