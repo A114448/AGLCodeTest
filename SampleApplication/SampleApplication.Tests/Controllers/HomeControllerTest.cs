@@ -17,6 +17,7 @@ namespace SampleApplication.Tests.Controllers
     [TestClass]
     public class HomeControllerTest
     {
+        //Another Unit test method is written in SampleApplicationUnitTest.cs 
         [TestMethod]
         public void IndexTestMaleOwnerPet()
         {
