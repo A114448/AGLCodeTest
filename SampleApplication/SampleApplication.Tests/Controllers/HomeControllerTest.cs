@@ -9,6 +9,8 @@ using SampleApplication.Controllers;
 using Moq;
 using Moq.Matchers;
 using SampleApplicationServiceModel;
+using SampleApplicationDataModel;
+using System.Configuration;
 
 namespace SampleApplication.Tests.Controllers
 {
@@ -16,42 +18,29 @@ namespace SampleApplication.Tests.Controllers
     public class HomeControllerTest
     {
         [TestMethod]
-        //public void Index()
-        //{
-        //    // Arrange
-        //    HomeController controller = new HomeController();
-
-        //    // Act
-        //    ViewResult result = controller.Index() as ViewResult;
-
-        //    // Assert
-        //    Assert.AreEqual("Modify this template to jump-start your ASP.NET MVC application.", result.ViewBag.Message);
-        //}
-
-        public void Index()
+        public void IndexTestMaleOwnerPet()
         {
+
+            var mockService = new Mock<ISampleService>();
+
+            List<animalModel> animalsM = new List<animalModel>()
+                    {
+                        new animalModel {name = "Garfield", type = "Cat"},
+                        new animalModel {name = "Jim", type = "Cat"},
+                        new animalModel {name = "Max", type = "Cat"},
+                        new animalModel {name = "Tom", type = "Cat"}
+                    };
+
+            string genderMale = "Male";
+
+            mockService.Setup(x => x.fetchPets(genderMale)).Returns(new List<animalModel>());
+
+            HomeController controller = new HomeController(mockService.Object);
+
+            var result = (controller.Index() as ViewResult).Model;
+
+            Assert.IsNotNull(result);
             
-            var mockService = new Moq.Mock<ISampleService>();
-
-            
-            //mockService.SetupProperty(client => client., "chat.mail.com").SetupProperty(client => client.Port, "1212");
-
-
-            mockService.Setup(client => client.fetchPets(It.IsAny<string>()));
-                //.Returns();
-
-            ISampleService sampleService = new SampleService() {};
-
-            ////Use the mock object of MailClient instead of actual object
-            //var result = sampleService.fetchPets(string s);
-
-            ////Verify that it return true
-           // Assert.IsTrue(result);
-
-            ////Verify that the MailClient's SendMail methods gets called exactly once when string is passed as parameters
-            mockService.Verify(client => client.fetchPets(It.IsAny<string>()), Times.Once);
-        }
-
-   
+         }
     }
 }

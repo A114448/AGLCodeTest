@@ -8,84 +8,80 @@ using System.Net.Http.Headers;
 using SampleApplicationDataModel;
 using Newtonsoft.Json;
 using System.Configuration;
+using NLog;
 
 namespace SampleApplicationServiceModel
 {
     public class SampleService : SampleApplicationServiceModel.ISampleService
     {
-        private string URL = ConfigurationManager.AppSettings["JsonUrl"].ToString();
-        
-        //List<animal> animalInfoFemale = new List<animal>();
+        public string URL = ConfigurationManager.AppSettings["JsonUrl"].ToString();
+        public static Logger logger = LogManager.GetCurrentClassLogger();
 
-        public List<animal> fetchPets(string gender)
+        public List<animalModel> fetchPets(string gender)
         {
-            List<animal> objFinal = new List<animal>();
-            //IEnumerable<animal> objList;
+            List<animalModel> objFinal = new List<animalModel>();
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(URL);
-
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            HttpResponseMessage response = client.GetAsync(URL).Result;
-            if (response.IsSuccessStatusCode)
+            try
             {
-                string responseData = response.Content.ReadAsStringAsync().Result;
-                List<Person> obj = JsonConvert.DeserializeObject<List<Person>>(responseData);
-                objFinal = FilterList(obj, gender);
-                //objList = objFinal.OrderBy(x => x.name).ToList().AsEnumerable();
-                //FilterListFemale(obj);
+                client.BaseAddress = new Uri(URL);
 
-                //Person owner_list = new Person();
-                //obj.RemoveAll(c => c.pets == null);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                //var flatList = obj.SelectMany(b => b.pets.Select(p => new animal
-                //{
-                    
-                //    name = p.name,
-                //    type = p.type
-                //}
-
-                //    )).ToList();
-                //flatList.RemoveAll(c => c.type.ToUpper() != ConfigurationManager.AppSettings["PetType"].ToString().ToUpper());
-                //owner_list.pets = flatList.OrderBy(c => c.name).ToList();
-                //return owner_list; 
-            }
-            return objFinal;
-        }
-
-
-        private List<animal> FilterList(List<Person> objPerson, string s)
-        {
-            List<animal> animalInfo = new List<animal>();
-            foreach (Person person in objPerson)
-            {
-                if (person.pets != null)
+                HttpResponseMessage response = client.GetAsync(URL).Result;
+                if (response.IsSuccessStatusCode)
                 {
-                    foreach (animal animal in person.pets)
-                    {
-                        if (animal.type.ToUpper() == ConfigurationManager.AppSettings["PetType"].ToString().ToUpper())
-                        {
-                            if (s == "M")
-                            {
-                                if (person.gender.ToUpper() == ConfigurationManager.AppSettings["Gender1"].ToString().ToUpper())
-                                    animalInfo.Add(animal);
-                            }
-                            else
-                            {
-                                if (person.gender.ToUpper() == ConfigurationManager.AppSettings["Gender2"].ToString().ToUpper())
-                                    animalInfo.Add(animal);
-                            }
-
-                        }
-
-                    }
+                    string responseData = response.Content.ReadAsStringAsync().Result;
+                    objFinal = GetPets(responseData, gender);
 
                 }
+
             }
-            return animalInfo;
+            catch (Exception ex)
+            {
+                logger.Log(LogLevel.Info, ex.Message); 
+            }
+
+            return objFinal;
+
         }
 
-    
+        public List<animalModel> GetPets(string jsonData, string gender)
+        {
+            List<animalModel> petList = new List<animalModel>();
+            try
+            {
+                List<PersonModel> obj = JsonConvert.DeserializeObject<List<PersonModel>>(jsonData);
+                string genderM = ConfigurationManager.AppSettings["GenderM"].ToString();
+                string genderF = ConfigurationManager.AppSettings["GenderF"].ToString(); 
+                obj.RemoveAll(c => c.pets == null);
+                if (gender == genderM)
+                {
+                    obj.RemoveAll(c => c.gender.ToUpper() != genderM.ToUpper());
+                }
+                else
+                {
+                    obj.RemoveAll(c => c.gender.ToUpper() != genderF.ToUpper());
+                }
 
+                var stageList = obj.SelectMany(b => b.pets.Select(d => new animalModel
+                {
+                    name = d.name,
+                    type = d.type
+                }
+
+                    )).ToList();
+
+                stageList.RemoveAll(x => x.type.ToUpper() != ConfigurationManager.AppSettings["PetType"].ToString().ToUpper());
+                petList = stageList.OrderBy(p => p.name).ToList();
+
+
+            }
+            catch (Exception ex)
+            {
+
+                logger.Log(LogLevel.Info, ex.Message); 
+            }
+            return petList;
+        }
     }
 }

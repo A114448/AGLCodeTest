@@ -12,8 +12,8 @@ namespace SampleApplicationDataModel
     public class ViewModel
     {
         
-        public List<animal> ListMale { get; set; }
-        public List<animal> ListFemale { get; set; }
+        public List<animalModel> ListMale { get; set; }
+        public List<animalModel> ListFemale { get; set; }
         
     }
 }

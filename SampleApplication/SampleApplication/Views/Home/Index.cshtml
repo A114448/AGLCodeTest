@@ -4,10 +4,10 @@
 
 @using SampleApplicationDataModel
 @model ViewModel
-
+<center><h2>Pet List</h2></center>
 <h3>Male</h3>
 <table>
-    @foreach (animal objanimal in Model.ListMale)
+    @foreach (animalModel objanimal in Model.ListMale)
     {
     <tr>
         <td>@objanimal.name</td>
@@ -16,7 +16,7 @@
 </table>
 <h3>Female</h3>
 <table>
-    @foreach (animal objanimal in Model.ListFemale)
+    @foreach (animalModel objanimal in Model.ListFemale)
     {
         <tr>
             <td>@objanimal.name</td>

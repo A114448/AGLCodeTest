@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SampleApplicationDataModel
 {
-    public class animal
+    public class animalModel
     {
         
         public string name { get; set; }

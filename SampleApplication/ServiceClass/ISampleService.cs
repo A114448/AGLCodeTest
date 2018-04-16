@@ -4,6 +4,7 @@ namespace SampleApplicationServiceModel
 {
     public interface ISampleService
     {
-        List<SampleApplicationDataModel.animal> fetchPets(string gender);
+        List<SampleApplicationDataModel.animalModel> fetchPets(string gender);
+        
     }
 }
