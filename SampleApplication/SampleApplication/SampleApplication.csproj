@@ -200,7 +200,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="ILogError.cs" />
     <Compile Include="IoCModule.cs" />
+    <Compile Include="LogError.cs" />
     <Compile Include="Models\AccountModels.cs">
       <SubType>Code</SubType>
     </Compile>

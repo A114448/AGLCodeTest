@@ -15,8 +15,10 @@ using System.Configuration;
 namespace SampleApplication.Tests.Controllers
 {
     [TestClass]
-    public class HomeControllerTest
+    public class HomeControllerTest : ISampleService
     {
+
+        
         //Another Unit test method is written in SampleApplicationUnitTest.cs 
         [TestMethod]
         public void IndexTestMaleOwnerPet()
@@ -38,10 +40,13 @@ namespace SampleApplication.Tests.Controllers
 
             HomeController controller = new HomeController(mockService.Object);
 
-            var result = (controller.Index() as ViewResult).Model;
+            var result = controller.Index() as ViewResult;
 
-            Assert.IsNotNull(result);
+            var model = result.ViewData.Model as List<animalModel>;
+
+            Assert.AreEqual(4, model.Count);
             
          }
+        
     }
 }

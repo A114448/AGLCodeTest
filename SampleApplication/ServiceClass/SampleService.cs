@@ -8,80 +8,66 @@ using System.Net.Http.Headers;
 using SampleApplicationDataModel;
 using Newtonsoft.Json;
 using System.Configuration;
-using NLog;
 
 namespace SampleApplicationServiceModel
 {
     public class SampleService : SampleApplicationServiceModel.ISampleService
     {
-        public string URL = ConfigurationManager.AppSettings["JsonUrl"].ToString();
-        public static Logger logger = LogManager.GetCurrentClassLogger();
+        private string URL = ConfigurationManager.AppSettings["JsonUrl"].ToString();
 
-        public List<animalModel> fetchPets(string gender)
+        private List<PersonModel> fetchPets()
         {
-            List<animalModel> objFinal = new List<animalModel>();
+            List<PersonModel> objData = new List<PersonModel>();
             HttpClient client = new HttpClient();
-            try
+           
+            client.BaseAddress = new Uri(URL);
+
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            HttpResponseMessage response = client.GetAsync(URL).Result;
+            if (response.IsSuccessStatusCode)
             {
-                client.BaseAddress = new Uri(URL);
-
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                HttpResponseMessage response = client.GetAsync(URL).Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    string responseData = response.Content.ReadAsStringAsync().Result;
-                    objFinal = GetPets(responseData, gender);
-
-                }
-
-            }
-            catch (Exception ex)
-            {
-                logger.Log(LogLevel.Info, ex.Message); 
+                string responseData = response.Content.ReadAsStringAsync().Result;
+                objData = JsonConvert.DeserializeObject<List<PersonModel>>(responseData);
             }
 
-            return objFinal;
+            return objData;
 
         }
 
-        public List<animalModel> GetPets(string jsonData, string gender)
+        public ViewModel GetPets()
+        {
+            ViewModel objViewModel = new ViewModel();
+            string genderM = ConfigurationManager.AppSettings["GenderM"].ToString();
+            string genderF = ConfigurationManager.AppSettings["GenderF"].ToString(); 
+            
+            objViewModel.ListFemale = FilterPets(fetchPets(), genderF);
+            objViewModel.ListMale = FilterPets(fetchPets(), genderM);
+            return objViewModel;
+        }
+
+        private List<animalModel> FilterPets(List<PersonModel> objPets, string gender)
         {
             List<animalModel> petList = new List<animalModel>();
-            try
+
+            objPets.RemoveAll(c => c.pets == null);
+
+            objPets.RemoveAll(c => c.gender.ToUpper() != gender.ToUpper());
+
+            var stageList = objPets.SelectMany(b => b.pets.Select(d => new animalModel
             {
-                List<PersonModel> obj = JsonConvert.DeserializeObject<List<PersonModel>>(jsonData);
-                string genderM = ConfigurationManager.AppSettings["GenderM"].ToString();
-                string genderF = ConfigurationManager.AppSettings["GenderF"].ToString(); 
-                obj.RemoveAll(c => c.pets == null);
-                if (gender == genderM)
-                {
-                    obj.RemoveAll(c => c.gender.ToUpper() != genderM.ToUpper());
-                }
-                else
-                {
-                    obj.RemoveAll(c => c.gender.ToUpper() != genderF.ToUpper());
-                }
-
-                var stageList = obj.SelectMany(b => b.pets.Select(d => new animalModel
-                {
-                    name = d.name,
-                    type = d.type
-                }
-
-                    )).ToList();
-
-                stageList.RemoveAll(x => x.type.ToUpper() != ConfigurationManager.AppSettings["PetType"].ToString().ToUpper());
-                petList = stageList.OrderBy(p => p.name).ToList();
-
-
+                name = d.name,
+                type = d.type
             }
-            catch (Exception ex)
-            {
 
-                logger.Log(LogLevel.Info, ex.Message); 
-            }
+                )).ToList();
+
+            stageList.RemoveAll(x => x.type.ToUpper() != ConfigurationManager.AppSettings["PetType"].ToString().ToUpper());
+
+            petList = stageList.OrderBy(p => p.name).ToList();
+
             return petList;
         }
+        
     }
 }

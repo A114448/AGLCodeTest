@@ -12,8 +12,8 @@ namespace SampleApplication
     {
         protected override void Load(ContainerBuilder builder)
         {
-            //builder.RegisterType<HomeController>().UsingConstructor(typeof(ISampleService));
             builder.RegisterType<SampleService>().As<ISampleService>().InstancePerHttpRequest();
+            builder.RegisterType<LogError>().As<ILogError>().InstancePerHttpRequest();
             base.Load(builder);
         }
     }

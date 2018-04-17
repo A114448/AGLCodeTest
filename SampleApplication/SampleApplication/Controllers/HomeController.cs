@@ -7,40 +7,36 @@ using System.Web.Http;
 using SampleApplicationDataModel;
 using SampleApplicationServiceModel;
 using System.Configuration;
-using NLog;
 
 namespace SampleApplication.Controllers
 {
     public class HomeController : Controller
     {
         private ISampleService sampleService;
-        private static Logger logger = LogManager.GetCurrentClassLogger();
-        public string genderM = ConfigurationManager.AppSettings["GenderM"].ToString();            
-        public string genderF = ConfigurationManager.AppSettings["GenderF"].ToString(); 
+        private ILogError logger;        
+        private string genderM = ConfigurationManager.AppSettings["GenderM"].ToString();
+        private string genderF = ConfigurationManager.AppSettings["GenderF"].ToString();
 
-        public HomeController(ISampleService sampleService)
+        public HomeController(ISampleService sampleService, ILogError logger)
         {
             this.sampleService = sampleService;
+            this.logger = logger;
         }
 
         public ViewResult Index()
         {
-            var viewModel = new ViewModel();            
-
+            ViewModel objModel = new ViewModel();
             try
             {
-                viewModel.ListMale = sampleService.fetchPets(genderM);
-                viewModel.ListFemale = sampleService.fetchPets(genderF);
-                
+                return View(sampleService.GetPets());
             }
             catch (Exception ex)
             {
-                logger.Log(LogLevel.Error, ex.Message);
+                logger.WriteEventLogEntry(ex.Message);
+                return View(objModel);
             }
-
-            return View(viewModel);
         }
 
-       
+        
     }
 }
