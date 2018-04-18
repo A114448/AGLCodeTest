@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
-
-namespace SampleApplicationDataModel
+﻿namespace SampleApplicationDataModel
 {
-    public class animalModel
-    {
-        
-        public string name { get; set; }
-        public string type { get; set; }
+    public class AnimalModel
+    {        
+        public string Name { get; set; }
+        public string Type { get; set; }
     }
 }

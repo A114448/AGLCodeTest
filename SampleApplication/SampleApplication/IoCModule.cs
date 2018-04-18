@@ -1,10 +1,6 @@
 ﻿using Autofac;
 using Autofac.Integration.Mvc;
 using SampleApplicationServiceModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SampleApplication
 {

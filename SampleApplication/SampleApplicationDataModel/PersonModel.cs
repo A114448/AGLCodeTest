@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace SampleApplicationDataModel
 {
     public class PersonModel
     {
-        public string name { get; set; }
-        public string gender { get; set; }
-        public string age { get; set; }
-        public List<animalModel> pets {get; set;}
+        public string Name { get; set; }
+        public string Gender { get; set; }
+        public string Age { get; set; }
+        public List<AnimalModel> Pets { get; set; }
     }
 }

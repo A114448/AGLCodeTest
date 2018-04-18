@@ -7,19 +7,19 @@
 <center><h2>Pet List</h2></center>
 <h3>Male</h3>
 <table>
-    @foreach (animalModel objanimal in Model.ListMale)
+    @foreach (AnimalModel objanimal in Model.ListMale)
     {
-    <tr>
-        <td>@objanimal.name</td>
-</tr>
+        <tr>
+            <td>@objanimal.Name</td>
+        </tr>
     }
 </table>
 <h3>Female</h3>
 <table>
-    @foreach (animalModel objanimal in Model.ListFemale)
+    @foreach (AnimalModel objanimal in Model.ListFemale)
     {
         <tr>
-            <td>@objanimal.name</td>
+            <td>@objanimal.Name</td>
         </tr>
     }
 </table>

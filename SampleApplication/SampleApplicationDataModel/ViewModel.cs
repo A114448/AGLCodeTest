@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
-
-
+﻿using System.Collections.Generic;
 namespace SampleApplicationDataModel
-{
-    
+{    
     public class ViewModel
-    {
-        
-        public List<animalModel> ListMale { get; set; }
-        public List<animalModel> ListFemale { get; set; }
+    {        
+        public List<AnimalModel> ListMale { get; set; }
+        public List<AnimalModel> ListFemale { get; set; }
         
     }
 }

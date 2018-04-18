@@ -1,5 +1,4 @@
-﻿using System;
-namespace SampleApplication
+﻿namespace SampleApplication
 {
    public interface ILogError
     {

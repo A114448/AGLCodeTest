@@ -12,27 +12,25 @@ namespace SampleApplication.Controllers
 {
     public class HomeController : Controller
     {
-        private ISampleService sampleService;
-        private ILogError logger;        
-        private string genderM = ConfigurationManager.AppSettings["GenderM"].ToString();
-        private string genderF = ConfigurationManager.AppSettings["GenderF"].ToString();
+        private readonly ILogError _logger;
+        private readonly ISampleService _sampleService;
 
         public HomeController(ISampleService sampleService, ILogError logger)
         {
-            this.sampleService = sampleService;
-            this.logger = logger;
+            _sampleService = sampleService;
+            _logger = logger;
         }
 
         public ViewResult Index()
         {
-            ViewModel objModel = new ViewModel();
+            var objModel = new ViewModel();
             try
             {
-                return View(sampleService.GetPets());
+                return View(_sampleService.GetPets());
             }
             catch (Exception ex)
             {
-                logger.WriteEventLogEntry(ex.Message);
+                _logger.WriteEventLogEntry(ex.Message);
                 return View(objModel);
             }
         }
